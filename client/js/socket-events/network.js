@@ -3,6 +3,7 @@
 const $ = require("jquery");
 const socket = require("../socket");
 const {vueApp, initChannel, findChannel, findNetwork} = require("../vue");
+const store = require("../store").default;
 
 socket.on("network", function(data) {
 	const network = data.networks[0];
@@ -11,7 +12,7 @@ socket.on("network", function(data) {
 	network.isCollapsed = false;
 	network.channels.forEach(initChannel);
 
-	vueApp.networks.push(network);
+	store.commit("networks", [...store.state.networks, network]);
 	vueApp.switchToChannel(network.channels[0]);
 
 	$("#connect")
@@ -20,11 +21,15 @@ socket.on("network", function(data) {
 });
 
 socket.on("network:options", function(data) {
-	vueApp.networks.find((n) => n.uuid === data.network).serverOptions = data.serverOptions;
+	const network = findNetwork(data.network);
+
+	if (network) {
+		network.serverOptions = data.serverOptions;
+	}
 });
 
 socket.on("network:status", function(data) {
-	const network = vueApp.networks.find((n) => n.uuid === data.network);
+	const network = findNetwork(data.network);
 
 	if (!network) {
 		return;
