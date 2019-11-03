@@ -2,7 +2,7 @@
 
 const $ = require("jquery");
 const socket = require("../socket");
-const {vueApp, initChannel, findChannel, findNetwork} = require("../vue");
+const {vueApp, initChannel} = require("../vue");
 const store = require("../store").default;
 
 socket.on("network", function(data) {
@@ -21,7 +21,7 @@ socket.on("network", function(data) {
 });
 
 socket.on("network:options", function(data) {
-	const network = findNetwork(data.network);
+	const network = store.getters.findNetwork(data.network);
 
 	if (network) {
 		network.serverOptions = data.serverOptions;
@@ -29,7 +29,7 @@ socket.on("network:options", function(data) {
 });
 
 socket.on("network:status", function(data) {
-	const network = findNetwork(data.network);
+	const network = store.getters.findNetwork(data.network);
 
 	if (!network) {
 		return;
@@ -47,7 +47,7 @@ socket.on("network:status", function(data) {
 });
 
 socket.on("channel:state", function(data) {
-	const channel = findChannel(data.chan);
+	const channel = store.getters.findChannel(data.chan);
 
 	if (channel) {
 		channel.channel.state = data.state;
@@ -55,7 +55,7 @@ socket.on("channel:state", function(data) {
 });
 
 socket.on("network:info", function(data) {
-	const network = findNetwork(data.uuid);
+	const network = store.getters.findNetwork(data.uuid);
 
 	if (!network) {
 		return;
