@@ -513,6 +513,10 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 		}
 	});
 
+	socket.on("mentions:get", () => {
+		socket.emit("mentions:list", client.mentions);
+	});
+
 	if (!Helper.config.public) {
 		socket.on("push:register", (subscription) => {
 			if (!Object.prototype.hasOwnProperty.call(client.config.sessions, token)) {

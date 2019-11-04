@@ -54,6 +54,7 @@ function Client(manager, name, config = {}) {
 		idMsg: 1,
 		name: name,
 		networks: [],
+		mentions: [],
 		sockets: manager.sockets,
 		manager: manager,
 		messageStorage: [],
