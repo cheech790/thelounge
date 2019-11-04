@@ -38,6 +38,11 @@
 							:network="network"
 							:text="channel.topic"
 					/></span>
+					<button
+						class="mentions"
+						aria-label="Open your mentions"
+						@click="openMentions"
+					/>
 					<button class="menu" aria-label="Open the context menu" />
 					<span
 						v-if="channel.type === 'channel'"
@@ -85,6 +90,7 @@
 		</div>
 		<span id="upload-progressbar" />
 		<ChatInput :network="network" :channel="channel" />
+		<Mentions />
 	</div>
 </template>
 
@@ -94,6 +100,7 @@ import ParsedMessage from "./ParsedMessage.vue";
 import MessageList from "./MessageList.vue";
 import ChatInput from "./ChatInput.vue";
 import ChatUserList from "./ChatUserList.vue";
+import Mentions from "./Mentions.vue";
 import ListBans from "./Special/ListBans.vue";
 import ListInvites from "./Special/ListInvites.vue";
 import ListChannels from "./Special/ListChannels.vue";
@@ -106,6 +113,7 @@ export default {
 		MessageList,
 		ChatInput,
 		ChatUserList,
+		Mentions,
 	},
 	props: {
 		network: Object,
@@ -150,6 +158,7 @@ export default {
 				socket.emit("input", {target, text});
 			}
 		},
+		openMentions() {},
 	},
 };
 </script>

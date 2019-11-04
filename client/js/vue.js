@@ -15,6 +15,7 @@ Vue.filter("roundBadgeNumber", roundBadgeNumber);
 const vueApp = new Vue({
 	el: "#viewport",
 	data: {
+		mentions: [],
 		activeChannel: null,
 		appName: document.title,
 		currentUserVisibleError: null,

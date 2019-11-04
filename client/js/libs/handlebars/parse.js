@@ -96,7 +96,10 @@ module.exports = function parse(createElement, text, message = undefined, networ
 
 		// Wrap these potentially styled fragments with links and channel buttons
 		if (textPart.link) {
-			const preview = message && message.previews.find((p) => p.link === textPart.link);
+			const preview =
+				message &&
+				message.previews &&
+				message.previews.find((p) => p.link === textPart.link);
 			const link = createElement(
 				"a",
 				{
