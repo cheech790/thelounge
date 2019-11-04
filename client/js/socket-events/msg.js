@@ -1,6 +1,5 @@
 "use strict";
 
-const $ = require("jquery");
 const socket = require("../socket");
 const cleanIrcMessage = require("../libs/handlebars/ircmessageparser/cleanIrcMessage");
 const webpush = require("../webpush");
@@ -14,7 +13,7 @@ try {
 	pop.src = "audio/pop.wav";
 } catch (e) {
 	pop = {
-		play: $.noop,
+		play() {},
 	};
 }
 
@@ -90,8 +89,6 @@ socket.on("msg", function(data) {
 });
 
 function notifyMessage(targetId, channel, activeChannel, msg) {
-	const button = $("#sidebar .chan[data-id='" + targetId + "']");
-
 	if (msg.highlight || (store.state.settings.notifyAllMessages && msg.type === "message")) {
 		if (!document.hasFocus() || !activeChannel || activeChannel.channel !== channel) {
 			if (store.state.settings.notification) {
@@ -149,9 +146,16 @@ function notifyMessage(targetId, channel, activeChannel, msg) {
 							timestamp: timestamp,
 						});
 						notify.addEventListener("click", function() {
-							window.focus();
-							button.trigger("click");
 							this.close();
+							window.focus();
+
+							const channelTarget = document.querySelector(
+								"#sidebar .chan[data-id='" + targetId + "']"
+							);
+
+							if (channelTarget) {
+								channelTarget.click();
+							}
 						});
 					}
 				} catch (exception) {
