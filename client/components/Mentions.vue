@@ -12,10 +12,10 @@
 						in unknown channel
 					</template>
 				</span>
-
 				<span :aria-label="message.time | localetime" class="time tooltipped tooltipped-n">
 					{{ messageTime(message.time) }}
 				</span>
+				<button @click="hideMention(message)">Hide</button>
 				<div class="content" dir="auto">
 					<ParsedMessage :network="null" :message="message" />
 				</div>
@@ -38,9 +38,9 @@ export default {
 	},
 	computed: {
 		resolvedMessages() {
-			const {findChannel} = require("../js/vue");
+			const {findChannel} = require("../js/vue"); // TODO
 
-			const messages = this.$root.mentions.reverse();
+			const messages = this.$root.mentions.slice().reverse();
 
 			for (const message of messages) {
 				message.channel = findChannel(message.chanId);
@@ -55,6 +55,14 @@ export default {
 	methods: {
 		messageTime(time) {
 			return moment(time).fromNow();
+		},
+		hideMention(message) {
+			this.$root.mentions.splice(
+				this.$root.mentions.findIndex((m) => m.msgId === message.msgId),
+				1
+			);
+
+			socket.emit("mentions:hide", message.msgId);
 		},
 	},
 };

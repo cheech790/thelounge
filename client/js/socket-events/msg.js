@@ -87,6 +87,17 @@ socket.on("msg", function(data) {
 	if (data.msg.self || data.msg.highlight) {
 		utils.synchronizeNotifiedState();
 	}
+
+	if (data.msg.highlight && channel.type === "channel") {
+		vueApp.mentions.push({
+			chanId: channel.id,
+			msgId: data.msg.id,
+			type: data.msg.type,
+			time: data.msg.time,
+			text: data.msg.text,
+			from: data.msg.from,
+		});
+	}
 });
 
 function notifyMessage(targetId, channel, activeChannel, msg) {

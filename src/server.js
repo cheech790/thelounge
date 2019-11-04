@@ -517,6 +517,15 @@ function initializeClient(socket, client, token, lastMessage, openChannel) {
 		socket.emit("mentions:list", client.mentions);
 	});
 
+	socket.on("mentions:hide", (msgId) => {
+		if (typeof msgId !== "number") {
+			return;
+		}
+
+		client.mentions.splice(client.mentions.findIndex((m) => m.msgId === msgId), 1);
+		// TODO: emit to other clients?
+	});
+
 	if (!Helper.config.public) {
 		socket.on("push:register", (subscription) => {
 			if (!Object.prototype.hasOwnProperty.call(client.config.sessions, token)) {
