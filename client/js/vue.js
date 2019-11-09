@@ -22,7 +22,6 @@ const vueApp = new Vue({
 			const socket = require("./socket");
 
 			require("./socket-events");
-			require("./contextMenuFactory");
 			require("./webpush");
 			require("./keybinds");
 
