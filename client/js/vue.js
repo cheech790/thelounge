@@ -119,12 +119,7 @@ function initChannel(channel) {
 	}
 }
 
-function getActiveWindowComponent() {
-	return vueApp.$refs.app.$refs.window;
-}
-
 module.exports = {
 	vueApp,
 	initChannel,
-	getActiveWindowComponent,
 };
