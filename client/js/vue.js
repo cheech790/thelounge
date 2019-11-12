@@ -8,26 +8,20 @@ const localetime = require("./helpers/localetime");
 const storage = require("./localStorage");
 const {router, navigate} = require("./router");
 const constants = require("./constants");
+const socket = require("./socket");
 
 Vue.filter("localetime", localetime);
+
+require("./socket-events");
+require("./contextMenuFactory");
+require("./webpush");
+require("./keybinds");
 
 const vueApp = new Vue({
 	el: "#viewport",
 	router,
 	mounted() {
-		// TODO: Hackfix because socket-events require vueApp somewhere
-		// and that breaks due to cyclical depenency as by this point vue.js
-		// does not export anything yet.
-		setTimeout(() => {
-			const socket = require("./socket");
-
-			require("./socket-events");
-			require("./contextMenuFactory");
-			require("./webpush");
-			require("./keybinds");
-
-			socket.open();
-		}, 1);
+		socket.open();
 	},
 	methods: {
 		switchToChannel(channel) {
@@ -83,25 +77,4 @@ store.watch(
 Vue.config.errorHandler = function(e) {
 	store.commit("currentUserVisibleError", `Vue error: ${e.message}`);
 	console.error(e); // eslint-disable-line
-};
-
-function initChannel(channel) {
-	channel.pendingMessage = "";
-	channel.inputHistoryPosition = 0;
-	channel.inputHistory = [""];
-	channel.historyLoading = false;
-	channel.scrolledToBottom = true;
-	channel.editTopic = false;
-
-	channel.moreHistoryAvailable = channel.totalMessages > channel.messages.length;
-	delete channel.totalMessages;
-
-	if (channel.type === "channel") {
-		channel.usersOutdated = true;
-	}
-}
-
-module.exports = {
-	vueApp,
-	initChannel,
 };
